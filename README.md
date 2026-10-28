@@ -83,6 +83,10 @@ HTTPS проще всего через [Caddy](https://caddyserver.com) — он
 
 Без Docker: установите Node.js 22 LTS, запустите `npm start` через systemd или `pm2`, тот же Caddy впереди.
 
+### Обновления на Render
+
+Сайт подключён к Render через GitHub-приложение Render: каждый новый коммит в ветку `main` автоматически пересобирает и перезапускает сайт (Settings → Build & Deploy → Auto-Deploy: On Commit). Вручную сборку можно запустить кнопкой «Manual Deploy → Deploy latest commit».
+
 ### Резервные копии
 
 Всё состояние сайта — в папке данных (`data/` или том `qbank-data` в Docker): файл `qbank.db` и папка `uploads`. Делайте копию хотя бы раз в сутки, например cron-задачей:
