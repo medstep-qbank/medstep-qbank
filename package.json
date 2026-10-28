@@ -1,0 +1,17 @@
+{
+  "name": "medstep-qbank",
+  "version": "1.0.0",
+  "description": "Банк вопросов для подготовки к USMLE на русском языке",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.13"
+  },
+  "scripts": {
+    "start": "node --env-file-if-exists=.env --disable-warning=ExperimentalWarning server/index.js",
+    "dev": "node --env-file-if-exists=.env --disable-warning=ExperimentalWarning --watch server/index.js",
+    "seed": "node --env-file-if-exists=.env --disable-warning=ExperimentalWarning server/cli.js seed",
+    "make-admin": "node --env-file-if-exists=.env --disable-warning=ExperimentalWarning server/cli.js make-admin",
+    "backup": "node --env-file-if-exists=.env --disable-warning=ExperimentalWarning server/cli.js backup"
+  }
+}
