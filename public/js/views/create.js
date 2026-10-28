@@ -1,4 +1,4 @@
-import { api, html, $, $$, on, store, toastError, qWord } from '../lib.js';
+import { api, html, $, $$, on, store, toast, toastError, qWord } from '../lib.js';
 
 const STATUS = [
   ['unused', 'Неиспользованные'],
@@ -76,7 +76,7 @@ export default async function create(root, { app, query }) {
         <div><h1>Создать тест</h1><p>Соберите блок из нужных разделов. В одном тесте — до ${cat.maxQuestions} вопросов.</p></div>
       </div>
       ${!cat.fullAccess ? html`<div class="notice warn"><p>Сейчас доступны только пробные вопросы. <a href="/app/account">Открыть полную базу</a></p></div>` : ''}
-      <form class="create-grid" id="create-form">
+      <form class="create-grid" id="create-form" novalidate>
         <section class="create-section">
           <header><h2>Экзамен</h2></header>
           <div class="seg" role="radiogroup" aria-label="Step">
@@ -141,7 +141,12 @@ export default async function create(root, { app, query }) {
       if (el.checked) list.forEach((x) => state[kind].add(x.id)); else state[kind].clear();
       changed();
     } else if (el.name === 'count') {
-      state.count = Number(el.value) || 1;
+      const max = maxCount();
+      state.count = Math.max(1, Math.min(max, Math.round(Number(el.value)) || 1));
+      if (String(state.count) !== el.value) {
+        el.value = state.count;
+        toast(`Доступно не больше ${qWord(max)} — значение исправлено`);
+      }
     }
   });
 

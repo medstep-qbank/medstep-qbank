@@ -198,7 +198,9 @@ export default [
     handler: ({ params }) => {
       const id = int(params.id, { name: 'id' });
       const used = sql('SELECT COUNT(*) AS c FROM test_items WHERE question_id = ?').get(id).c;
-      if (used) {
+      const fromPack = sql('SELECT ext_id FROM questions WHERE id = ?').get(id)?.ext_id;
+      // Questions from content packs are archived, not deleted — otherwise the next start would re-add them.
+      if (used || fromPack) {
         sql(`UPDATE questions SET status = 'archived', updated_at = ? WHERE id = ?`).run(now(), id);
         return { archived: true };
       }

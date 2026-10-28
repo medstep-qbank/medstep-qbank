@@ -177,6 +177,12 @@ CREATE TABLE IF NOT EXISTS settings (
 // Unicode-aware lower() — SQLite's built-in LIKE/lower only fold ASCII, not Cyrillic.
 db.function('ulower', { deterministic: true }, (v) => (v == null ? null : String(v).toLowerCase()));
 
+// Migration: stable key for questions shipped in server/content/*.json
+if (!db.prepare('PRAGMA table_info(questions)').all().some((c) => c.name === 'ext_id')) {
+  db.exec('ALTER TABLE questions ADD COLUMN ext_id TEXT');
+}
+db.exec('CREATE UNIQUE INDEX IF NOT EXISTS questions_ext ON questions(ext_id) WHERE ext_id IS NOT NULL');
+
 const cache = new Map();
 /** Prepared-statement cache. */
 export function sql(text) {

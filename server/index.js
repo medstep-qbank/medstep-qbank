@@ -9,7 +9,8 @@ import accountRoutes from './routes/account.js';
 import qbankRoutes from './routes/qbank.js';
 import studyRoutes from './routes/study.js';
 import adminRoutes from './routes/admin.js';
-import { seedDemo } from './seed.js';
+import { seedDemo, seedTaxonomy } from './seed.js';
+import { loadContentPacks } from './content.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PUBLIC_DIR = path.resolve(__dirname, '..', 'public');
@@ -31,10 +32,13 @@ if (process.env.ADMIN_EMAIL && process.env.ADMIN_PASSWORD) {
   }
 }
 
+seedTaxonomy();
 if (process.env.SEED_DEMO !== '0' && sql('SELECT COUNT(*) AS c FROM questions').get().c === 0) {
   const n = seedDemo();
   console.log(`Добавлено демо-вопросов: ${n} (отключить: SEED_DEMO=0)`);
 }
+
+loadContentPacks();
 
 cleanupSessions();
 setInterval(cleanupSessions, 6 * 3600_000).unref();
